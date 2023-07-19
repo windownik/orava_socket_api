@@ -21,6 +21,6 @@ async def handler_get_updates(msg: dict, db: Depends, websocket: WebSocket):
     for chat in users_chats:
         messages = await conn.get_users_messages_by_last_msg(db=db, lust_msg_id=update_msg.lust_msg_id, chat_id=chat[0])
         all_message = all_message + messages
-    print(len(all_message))
+    print(len(all_message), all_message)
     await websocket.send_json(socket_resp.get_message(all_message))
     return True

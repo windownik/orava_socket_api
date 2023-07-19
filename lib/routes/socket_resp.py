@@ -68,15 +68,11 @@ class SocketRespGetUpdates:
                              "msg_type": "system",
                              'desc': 'not enough rights'}
 
-    def get_message(self, msg_data: tuple):
-        message_list = []
-        for one in msg_data:
-            msg = Message.parse_obj(one)
-            message_list.append(msg.dict())
+    def get_message(self, msg_data: list):
         print('create')
         return {"ok": True,
                 'status_code': 200,
                 "msg_type": "send_updates",
                 'to_user_id': self.receive_msg.from_id,
-                "messages": message_list
+                "messages": msg_data
                 }

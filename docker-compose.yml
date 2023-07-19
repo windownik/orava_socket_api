@@ -1,0 +1,15 @@
+version: "3.6"
+services:
+
+  api:
+    build: .
+    environment:
+      DATABASE_NAME: "orava"
+      IP_SERVER: "45.82.68.203"
+      PORT_SERVER: 10050
+
+    volumes:
+      - ./:/main
+    ports:
+      - "10020:10020"
+    network_mode: "host"

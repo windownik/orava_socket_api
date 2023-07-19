@@ -73,7 +73,7 @@ class SocketRespGetUpdates:
         for one in msg_data:
             msg = Message.parse_obj(one)
             message_list.append(msg.dict())
-
+        print('create')
         return {"ok": True,
                 'status_code': 200,
                 "msg_type": "send_updates",

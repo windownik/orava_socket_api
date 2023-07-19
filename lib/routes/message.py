@@ -59,7 +59,7 @@ async def get():
     return HTMLResponse(html)
 
 
-@app.websocket("/ws/{user_id}", tags=['Chat'])
+@app.websocket("/ws/{user_id}")
 async def websocket_endpoint(websocket: WebSocket, user_id: int, db=Depends(data_b.connection)):
     await manager.connect(websocket, user_id=user_id)
     print('Connect', manager.connections.keys())

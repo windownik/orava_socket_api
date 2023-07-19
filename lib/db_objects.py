@@ -95,17 +95,17 @@ class Message(BaseModel):
     deleted_date: int = 0
     create_date: int = 0
 
-    def msg_from_db(self, msg: dict):
-        self.msg_id = msg['msg_id']
-        self.text = msg['text']
-        self.from_id = msg['from_id']
-        self.reply_id = msg['reply_id']
-        self.chat_id = msg['chat_id']
-        self.file_id = msg['file_id']
-        self.status = msg['status']
-        self.read_date = msg['read_date']
-        self.deleted_date = msg['deleted_date']
-        self.create_date = msg['create_date']
+    # def msg_from_db(self, msg: dict):
+    #     self.msg_id = msg['msg_id']
+    #     self.text = msg['text']
+    #     self.from_id = msg['from_id']
+    #     self.reply_id = msg['reply_id']
+    #     self.chat_id = msg['chat_id']
+    #     self.file_id = msg['file_id']
+    #     self.status = msg['status']
+    #     self.read_date = msg['read_date']
+    #     self.deleted_date = msg['deleted_date']
+    #     self.create_date = msg['create_date']
 
     def to_dialog(self):
         return {

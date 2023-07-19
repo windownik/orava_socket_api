@@ -319,7 +319,7 @@ async def get_users_unread_messages(db: Depends, chat_id: int, ):
 async def get_users_messages_by_last_msg(db: Depends, lust_msg_id: int, chat_id: int):
     data = await db.fetch(f"SELECT * FROM messages "
                           f"WHERE chat_id = $1 "
-                          f"AND lust_msg_id > $2 "
+                          f"AND msg_id > $2 "
                           f"AND deleted_date = 0 ORDER BY create_date DESC LIMIT 20;", chat_id, lust_msg_id)
     return data
 

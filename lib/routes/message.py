@@ -54,12 +54,12 @@ async def initialization(connect):
     await connect.execute("SELECT 1")
 
 
-@app.get("/ws_chat")
+@app.get("/ws_chat", tags=['Chat'])
 async def get():
     return HTMLResponse(html)
 
 
-@app.websocket("/ws/{user_id}")
+@app.websocket("/ws/{user_id}", tags=['Chat'])
 async def websocket_endpoint(websocket: WebSocket, user_id: int, db=Depends(data_b.connection)):
     await manager.connect(websocket, user_id=user_id)
     print('Connect', manager.connections.keys())

@@ -24,6 +24,7 @@ async def handler_get_updates(msg: dict, db: Depends, websocket: WebSocket):
         for one in messages:
 
             new_msg = Message.parse_obj(one)
+            print(new_msg)
             all_message.append(new_msg.dict())
 
     print(len(all_message), all_message)

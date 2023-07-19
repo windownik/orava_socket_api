@@ -10,6 +10,8 @@ def check_msg(msg: dict, main_message: dict):
     for key in main_message.keys():
         if key not in msg.keys():
             return False
+    if 'body' not in main_message.keys():
+        return True
 
     for key in main_message['body'].keys():
         if key not in msg['body'].keys():

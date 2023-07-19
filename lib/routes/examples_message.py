@@ -21,6 +21,5 @@ example_get_updates_message = {
     'msg_type': 'chat_message',
     "date_time": 123,
     'from_id': 32,
-    'chat_id': 65,
     'lust_msg_id': 65,
 }

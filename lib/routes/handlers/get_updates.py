@@ -20,9 +20,9 @@ async def handler_get_updates(msg: dict, db: Depends, websocket: WebSocket):
     print('users_chats', users_chats)
     for chat in users_chats:
         messages = await conn.get_users_messages_by_last_msg(db=db, lust_msg_id=update_msg.lust_msg_id, chat_id=chat[0])
-        print('messages', messages)
-        for one in messages:
 
+        for one in messages:
+            print('messages', one)
             new_msg = Message.parse_obj(one)
             print(new_msg)
             all_message.append(new_msg.dict())

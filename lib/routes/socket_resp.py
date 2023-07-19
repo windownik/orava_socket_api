@@ -1,7 +1,7 @@
+from lib.db_objects import ReceiveMessage, GetUpdatesMessage, Message
 
-from lib.db_objects import ReceiveMessage
 
-class SocketResp:
+class SocketRespMsg:
     receive_msg: ReceiveMessage = None
     response_200: dict[str, int | bool | str]
     response_401: dict[str, int | bool | str]
@@ -42,3 +42,41 @@ class SocketResp:
                              'desc': 'save and send to user',
                              "body": self.receive_msg.body.dict()
                              }
+
+
+class SocketRespGetUpdates:
+    receive_msg: GetUpdatesMessage = None
+    response_401: dict[str, int | bool | str]
+    response_400_rights: dict[str, int | bool | str]
+
+    def __init__(self):
+        self.response_400_not_check = {"ok": False,
+                                       'status_code': 400,
+                                       "msg_type": "system",
+                                       'desc': 'not check message'}
+
+    def update_message(self, receive_msg: GetUpdatesMessage):
+        self.receive_msg = receive_msg
+
+        self.response_401 = {"ok": False,
+                             'status_code': 401,
+                             "msg_type": "system",
+                             'desc': 'bad refresh'}
+
+        self.response_401 = {"ok": False,
+                             'status_code': 400,
+                             "msg_type": "system",
+                             'desc': 'not enough rights'}
+
+    def get_message(self, msg_data: tuple):
+        message_list = []
+        for one in msg_data:
+            msg = Message.parse_obj(one)
+            message_list.append(msg.dict())
+
+        return {"ok": True,
+                'status_code': 200,
+                "msg_type": "send_updates",
+                'to_user_id': self.receive_msg.from_id,
+                "messages": message_list
+                }

@@ -1,5 +1,3 @@
-
-
 example_text_message = {
     'access_token': 'fnriverino',
     'msg_client_id': 12,
@@ -19,14 +17,10 @@ example_text_message = {
 }
 
 example_get_updates_message = {
-    'access_token': 'fnriverino',
-    'msg_client_id': 12,
+    'refresh_token': 'fnriverino',
     'msg_type': 'chat_message',
-    'body': {
-        'msg_id': 2132,
-        'from_id': 32,
-        'chat_id': 65,
-        'lust_msg_id': 65,
-        'create_date': 124321412,
-    }
+    "date_time": 123,
+    'from_id': 32,
+    'chat_id': 65,
+    'lust_msg_id': 65,
 }

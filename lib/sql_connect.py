@@ -254,26 +254,6 @@ async def save_msg(db: Depends, msg: dict):
     return data
 
 
-# Создаем новый чат
-async def create_chat(db: Depends, owner_id: int, name: str = '0', img_url: str = '0', little_img_url: str = '0',
-                      chat_type: str = 'dialog', community_id: int = 0):
-    now = datetime.datetime.now()
-    data = await db.fetch(f"INSERT INTO all_chats (owner_id, community_id, name, img_url, little_img_url, chat_type, "
-                          f"create_date) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT DO NOTHING RETURNING *;",
-                          owner_id, community_id, name, img_url, little_img_url, chat_type,
-                          int(time.mktime(now.timetuple())))
-    return data
-
-
-# Создаем новый чат
-async def save_user_to_chat(db: Depends, chat_id: int, user_id: int, status: str = 'user'):
-    now = datetime.datetime.now()
-    data = await db.fetch(f"INSERT INTO users_chat (chat_id, user_id, status, create_date) "
-                          f"VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING RETURNING *;",
-                          chat_id, user_id, status, int(time.mktime(now.timetuple())))
-    return data
-
-
 # получаем данные с одним фильтром
 async def read_data(db: Depends, table: str, id_name: str, id_data, name: str = '*'):
     data = await db.fetch(f"SELECT {name} FROM {table} WHERE {id_name} = $1;", id_data)
@@ -300,14 +280,6 @@ async def get_count_users_in_chat(db: Depends, chat_id: int,):
                           f"ON users_chat.user_id = all_users.user_id "
                           f"WHERE users_chat.chat_id = $1;",
                           chat_id)
-    return data
-
-
-# получаем данные с одним фильтром
-async def get_users_dialog(db: Depends, user_id: int):
-    data = await db.fetch(f"SELECT users_chat.chat_id, all_chats.owner_id FROM users_chat JOIN all_chats "
-                          f"ON users_chat.chat_id = all_chats.chat_id "
-                          f"WHERE users_chat.user_id = $1 AND all_chats.chat_type = 'dialog';", user_id, )
     return data
 
 
@@ -340,6 +312,15 @@ async def get_users_unread_messages(db: Depends, chat_id: int, ):
                           f"WHERE chat_id = $1 "
                           f"AND read_date = 0 "
                           f"AND deleted_date = 0 ORDER BY create_date DESC LIMIT 20;", chat_id)
+    return data
+
+
+# получаем 20 не прочитанных сообщений
+async def get_users_messages_by_last_msg(db: Depends, lust_msg_id: int, chat_id: int):
+    data = await db.fetch(f"SELECT * FROM messages "
+                          f"WHERE chat_id = $1 "
+                          f"AND lust_msg_id > $2 "
+                          f"AND deleted_date = 0 ORDER BY create_date DESC LIMIT 20;", chat_id, lust_msg_id)
     return data
 
 
@@ -377,12 +358,6 @@ async def get_users_for_push(db: Depends, lang: str, users_account_type: str, ):
         sql_where = f" WHERE {sql_where[4:]}"
 
     data = await db.fetch(f"SELECT user_id FROM all_users{sql_where};")
-    return data
-
-
-# получаем данные без фильтров
-async def read_all(db: Depends, table: str, order: str, name: str = '*'):
-    data = await db.fetch(f"SELECT {name} FROM {table} ORDER BY {order};")
     return data
 
 

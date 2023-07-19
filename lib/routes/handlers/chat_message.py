@@ -2,11 +2,11 @@ from lib.db_objects import ReceiveMessage
 from lib.routes.connection_manager import ConnectionManager
 from fastapi import WebSocket, Depends
 from lib import sql_connect as conn
-from lib.routes.socket_resp import SocketResp
+from lib.routes.socket_resp import SocketRespMsg
 
 
 async def handler_chat_message(msg: dict, db: Depends, user_id: int, websocket: WebSocket,
-                               manager: ConnectionManager, socket_resp: SocketResp):
+                               manager: ConnectionManager, socket_resp: SocketRespMsg):
 
     receive_msg = ReceiveMessage.parse_obj(msg)
     socket_resp.update_message(receive_msg)

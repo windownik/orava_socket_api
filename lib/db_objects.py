@@ -132,8 +132,16 @@ class Community(BaseModel):
 
 
 class ReceiveMessage(BaseModel):
-    access_token: str = 0
+    access_token: str = '0'
     msg_client_id: int = 0
     msg_type: str = '0'
     body: Message = None
 
+
+class GetUpdatesMessage(BaseModel):
+    refresh_token: str = '0'
+    msg_type: str = '0'
+    date_time: int = 0
+    from_id: int = 0
+    chat_id: int = 0
+    lust_msg_id: int = 0

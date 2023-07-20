@@ -18,7 +18,7 @@ def custom_openapi():
     openapi_schema = get_openapi(
         title="Welcome to Orava app API",
         version="0.9",
-        description="This is main API of service",
+        description="This is socket API service",
         routes=app.routes,
         tags=[
             {'name': "Chat", 'description': "All about socket chats"}

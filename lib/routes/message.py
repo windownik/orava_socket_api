@@ -77,7 +77,7 @@ async def websocket_endpoint(websocket: WebSocket, user_id: int, db=Depends(data
             if 'echo' in data.keys():
                 data["user_id"] = user_id
                 # await manager.connect(websocket, user_id=user_id)
-                await websocket.send_json(str(data))
+                await websocket.send_json(data)
                 continue
             check = await msg_manager(data, db=db, websocket=websocket, manager=manager, user=user)
 

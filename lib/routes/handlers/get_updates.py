@@ -1,10 +1,10 @@
-from lib.db_objects import GetUpdatesMessage, Message
+from lib.db_objects import GetUpdatesMessage, Message, User
 from fastapi import WebSocket, Depends
 from lib import sql_connect as conn
 from lib.routes.socket_resp import SocketRespGetUpdates
 
 
-async def handler_get_updates(msg: dict, db: Depends, websocket: WebSocket):
+async def handler_get_updates(msg: dict, db: Depends, websocket: WebSocket, reqwest_user: User):
     socket_resp = SocketRespGetUpdates()
     update_msg = GetUpdatesMessage.parse_obj(msg)
     socket_resp.update_message(update_msg)
@@ -21,7 +21,22 @@ async def handler_get_updates(msg: dict, db: Depends, websocket: WebSocket):
 
         for one in messages:
             new_msg = Message.parse_obj(one)
-            all_message.append(new_msg.dict())
+            msg_json = await add_user_and_reply_to_msg(db=db, msg=new_msg, reqwest_user=reqwest_user)
+            all_message.append(msg_json)
 
     await websocket.send_json(socket_resp.get_message(all_message))
     return True
+
+
+async def add_user_and_reply_to_msg(db: Depends, msg: Message, reqwest_user: User) -> dict:
+    await msg.add_user_to_msg(reqwest_user=reqwest_user, db=db)
+
+    msg_dict = msg.dict()
+
+    if msg.reply_id != 0:
+        reply_msg_data = await conn.read_data(db=db, table='messages', id_name='msg_id', id_data=msg.msg_id)
+        reply_msg: Message = Message.parse_obj(reply_msg_data[0])
+        await reply_msg.add_user_to_msg(reqwest_user=reqwest_user, db=db)
+
+        msg_dict['reply'] = reply_msg.dict()
+    return msg_dict

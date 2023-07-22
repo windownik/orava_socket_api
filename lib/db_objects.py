@@ -95,6 +95,8 @@ class Message(BaseModel):
     deleted_date: int = 0
     create_date: int = 0
 
+    sender: User = None
+
     # def msg_from_db(self, msg: dict):
     #     self.msg_id = msg['msg_id']
     #     self.text = msg['text']
@@ -125,6 +127,18 @@ class Message(BaseModel):
 
     def update_msg_id(self, msg_id: int):
         self.msg_id = msg_id
+
+    def update_user_sender(self, sender: User):
+        self.sender = sender
+
+    async def add_user_to_msg(self, db: Depends, reqwest_user: User):
+        if self.from_id == reqwest_user.user_id:
+            self.update_user_sender(reqwest_user)
+        else:
+            user_data = await conn.read_data(db=db, name='*', table='all_users', id_name='user_id',
+                                             id_data=self.from_id)
+            msg_send_user: User = User.parse_obj(user_data[0])
+            self.update_user_sender(msg_send_user)
 
 
 class Community(BaseModel):

@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse
 from lib import sql_connect as conn
 
 from lib.app_init import app
+from lib.db_objects import User
 from lib.routes.check_message import msg_manager
 from lib.routes.connection_manager import manager
 from lib.sql_connect import data_b
@@ -62,6 +63,8 @@ async def get():
 @app.websocket("/ws/{user_id}")
 async def websocket_endpoint(websocket: WebSocket, user_id: int, db=Depends(data_b.connection)):
     await manager.connect(websocket, user_id=user_id)
+    user_data = await conn.read_data(db=db, name='*', table='all_users', id_name='user_id', id_data=user_id)
+    user = User.parse_obj(user_data[0])
     print('Connect', manager.connections.keys())
     # Очищаем пуш метки
     await conn.clear_users_chat_push(db=db, user_id=user_id)
@@ -76,7 +79,7 @@ async def websocket_endpoint(websocket: WebSocket, user_id: int, db=Depends(data
                 # await manager.connect(websocket, user_id=user_id)
                 await websocket.send_json(str(data))
                 continue
-            check = await msg_manager(data, db=db, user_id=user_id, websocket=websocket, manager=manager)
+            check = await msg_manager(data, db=db, websocket=websocket, manager=manager, user=user)
 
             if not check:
                 continue

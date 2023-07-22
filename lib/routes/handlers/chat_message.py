@@ -25,13 +25,13 @@ async def handler_chat_message(msg: dict, db: Depends, user_id: int, websocket: 
     receive_msg = ReceiveMessage.parse_obj(msg)
     socket_resp.update_message(receive_msg)
 
-    # отправляем подтверждение о доставке и сохранении
-    await websocket.send_json(socket_resp.response_201_confirm_receive)
-
     user_in_chat = await conn.check_user_in_chat(db=db, user_id=user_id, chat_id=receive_msg.body.chat_id)
     if not user_in_chat:
         await websocket.send_json(socket_resp.response_400_rights)
         return True
+    else:
+        # отправляем подтверждение о доставке и сохранении
+        await websocket.send_json(socket_resp.response_201_confirm_receive)
 
     all_users = await conn.read_data(table='users_chat', id_name='chat_id',
                                      id_data=receive_msg.body.chat_id, db=db)

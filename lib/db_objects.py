@@ -18,7 +18,6 @@ class User(BaseModel):
     description: str
     lang: str
     status: str
-    push: str
     last_active: int
     create_date: int
 

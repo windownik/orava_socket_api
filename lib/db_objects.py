@@ -95,18 +95,7 @@ class Message(BaseModel):
     create_date: int = 0
 
     sender: User = None
-
-    # def msg_from_db(self, msg: dict):
-    #     self.msg_id = msg['msg_id']
-    #     self.text = msg['text']
-    #     self.from_id = msg['from_id']
-    #     self.reply_id = msg['reply_id']
-    #     self.chat_id = msg['chat_id']
-    #     self.file_id = msg['file_id']
-    #     self.status = msg['status']
-    #     self.read_date = msg['read_date']
-    #     self.deleted_date = msg['deleted_date']
-    #     self.create_date = msg['create_date']
+    reply = None
 
     def to_dialog(self):
         return {
@@ -161,6 +150,11 @@ class ReceiveMessage(BaseModel):
     msg_client_id: int = 0
     msg_type: str = '0'
     body: Message = None
+
+    def update_reply(self, msg_data: dict):
+        if 'reply' in msg_data.keys():
+            reply_msg = Message.parse_obj(msg_data['reply'])
+            self.body.reply = reply_msg
 
 
 class GetUpdatesMessage(BaseModel):

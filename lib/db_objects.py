@@ -95,7 +95,6 @@ class Message(BaseModel):
     create_date: int = 0
 
     sender: User = None
-    reply = None
 
     def to_dialog(self):
         return {

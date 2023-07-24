@@ -23,13 +23,9 @@ async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: We
 
     new_msg = Message.parse_obj(msg_data[0])
     msg_json = await add_user_and_reply_to_msg(db=db, msg=new_msg, reqwest_user=user)
-    print(1)
     receive_msg: ReceiveMessage = ReceiveMessage.parse_obj(msg)
-    print(2)
     receive_msg.update_reply(msg)
-    print(3)
     socket_resp.update_message(receive_msg, msg_json)
-    print(4)
     user_in_chat = await conn.check_user_in_chat(db=db, user_id=user.user_id, chat_id=receive_msg.body.chat_id)
     if not user_in_chat:
         await websocket.send_json(socket_resp.response_400_rights)

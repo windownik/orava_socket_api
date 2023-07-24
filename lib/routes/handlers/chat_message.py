@@ -21,7 +21,7 @@ async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: We
 
     msg_data = await conn.save_msg(db=db, msg=msg['body'])
 
-    new_msg = Message.parse_obj(msg_data)
+    new_msg = Message.parse_obj(msg_data[0])
     msg_json = await add_user_and_reply_to_msg(db=db, msg=new_msg, reqwest_user=user)
     print(1)
     receive_msg: ReceiveMessage = ReceiveMessage.parse_obj(msg)

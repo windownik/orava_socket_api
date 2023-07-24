@@ -9,7 +9,7 @@ async def handler_chat_message(msg: dict, db: Depends, user_id: int, websocket: 
                                manager: ConnectionManager, socket_resp: SocketRespMsg):
 
     receive_msg = ReceiveMessage.parse_obj(msg)
-    socket_resp.update_message(receive_msg)
+    socket_resp.update_message(receive_msg, msg)
 
     # Проверяем права доступа на сообщение
     owner_id = await conn.get_token(db=db, token_type='access', token=receive_msg.access_token)
@@ -21,9 +21,10 @@ async def handler_chat_message(msg: dict, db: Depends, user_id: int, websocket: 
     msg_id = await conn.save_msg(db=db, msg=msg['body'])
 
     msg['body']['msg_id'] = msg_id[0][0]
+    msg_body: dict = msg['body']
 
     receive_msg = ReceiveMessage.parse_obj(msg)
-    socket_resp.update_message(receive_msg)
+    socket_resp.update_message(receive_msg, msg_body)
 
     user_in_chat = await conn.check_user_in_chat(db=db, user_id=user_id, chat_id=receive_msg.body.chat_id)
     if not user_in_chat:

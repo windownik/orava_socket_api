@@ -14,7 +14,7 @@ class SocketRespMsg:
                                        "msg_type": "system",
                                        'desc': 'not check message'}
 
-    def update_message(self, receive_msg: ReceiveMessage):
+    def update_message(self, receive_msg: ReceiveMessage, msg_body: dict):
         self.receive_msg = receive_msg
 
         self.response_401 = {"ok": False,
@@ -40,7 +40,7 @@ class SocketRespMsg:
                              'status_code': 200,
                              "msg_type": "send_message",
                              'desc': 'save and send to user',
-                             "body": self.receive_msg.body.dict()
+                             "body": msg_body
                              }
 
 

@@ -1,15 +1,16 @@
-from lib.db_objects import ReceiveMessage
+from lib.db_objects import ReceiveMessage, Message, User
 from lib.routes.connection_manager import ConnectionManager
 from fastapi import WebSocket, Depends
 from lib import sql_connect as conn
+from lib.routes.handlers.get_updates import add_user_and_reply_to_msg
 from lib.routes.socket_resp import SocketRespMsg
 
 
-async def handler_chat_message(msg: dict, db: Depends, user_id: int, websocket: WebSocket,
+async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: WebSocket,
                                manager: ConnectionManager, socket_resp: SocketRespMsg):
 
     receive_msg = ReceiveMessage.parse_obj(msg)
-    socket_resp.update_message(receive_msg)
+    socket_resp.update_message(receive_msg, msg)
 
     # Проверяем права доступа на сообщение
     owner_id = await conn.get_token(db=db, token_type='access', token=receive_msg.access_token)
@@ -18,15 +19,16 @@ async def handler_chat_message(msg: dict, db: Depends, user_id: int, websocket: 
         await websocket.send_json(socket_resp.response_401)
         return True
 
-    msg_id = await conn.save_msg(db=db, msg=msg['body'])
+    msg_data = await conn.save_msg(db=db, msg=msg['body'])
 
-    msg['body']['msg_id'] = msg_id[0][0]
+    new_msg = Message.parse_obj(msg_data)
+    msg_json = await add_user_and_reply_to_msg(db=db, msg=new_msg, reqwest_user=user)
 
     receive_msg: ReceiveMessage = ReceiveMessage.parse_obj(msg)
     receive_msg.update_reply(msg)
-    socket_resp.update_message(receive_msg)
+    socket_resp.update_message(receive_msg, msg_json)
 
-    user_in_chat = await conn.check_user_in_chat(db=db, user_id=user_id, chat_id=receive_msg.body.chat_id)
+    user_in_chat = await conn.check_user_in_chat(db=db, user_id=user.user_id, chat_id=receive_msg.body.chat_id)
     if not user_in_chat:
         await websocket.send_json(socket_resp.response_400_rights)
         return True

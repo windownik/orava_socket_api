@@ -31,7 +31,7 @@ async def msg_manager(msg: dict, db: Depends, user: User, websocket: WebSocket,
         if not check_msg(msg, example_text_message):
             await websocket.send_json(socket_resp.response_400_not_check)
             return True
-        await handler_chat_message(msg=msg, db=db, user_id=user.user_id, websocket=websocket, manager=manager,
+        await handler_chat_message(msg=msg, db=db, user=user, websocket=websocket, manager=manager,
                                    socket_resp=socket_resp)
     # Определяем тип сообщения
     elif msg['msg_type'] == 'get_updates':

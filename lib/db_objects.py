@@ -87,6 +87,7 @@ class Message(BaseModel):
     from_id: int = 0
     reply_id: int = 0
     chat_id: int = 0
+    to_id: int = 0
     file_id: int = 0
 
     status: str = '0'
@@ -105,6 +106,7 @@ class Message(BaseModel):
             "from_id": self.from_id,
             "replay_id": self.reply_id,
             "chat_id": self.chat_id,
+            "to_id": self.to_id,
             "file_id": self.file_id,
             "status": self.status,
             "read_date": self.read_date,

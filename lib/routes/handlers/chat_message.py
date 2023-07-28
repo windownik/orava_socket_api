@@ -36,11 +36,12 @@ async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: We
         await websocket.send_json(socket_resp.response_201_confirm_receive)
 
     all_users = await conn.read_data(table='users_chat', id_name='chat_id', id_data=receive_msg.body.chat_id, db=db)
-
+    print(new_msg.status)
     if new_msg.status == 'with_file':
         file_id = 0
         while file_id == 0:
             await asyncio.sleep(3)
+            print(file_id)
             file_id = (await conn.read_data(db=db, table='messages', name='file_id', id_name='msg_id',
                                             id_data=new_msg.msg_id))[0][0]
         receive_msg.body.file_id = file_id

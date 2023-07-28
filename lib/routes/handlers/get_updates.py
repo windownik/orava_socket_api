@@ -34,7 +34,7 @@ async def add_user_and_reply_to_msg(db: Depends, msg: Message, reqwest_user: Use
     await msg.add_user_to_msg(reqwest_user=reqwest_user, db=db)
 
     msg_dict = msg.dict()
-    msg_dict = await add_file_to_dict(msg_dict=msg_dict, msg=msg)
+    msg_dict = await add_file_to_dict(msg_dict=msg_dict, msg=msg, db=db)
 
     if msg.reply_id != 0:
         reply_msg_data = await conn.read_data(db=db, table='messages', id_name='msg_id', id_data=msg.reply_id)

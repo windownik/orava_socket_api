@@ -1,7 +1,7 @@
 import os
 
-ip_server = os.environ.get("IP_SERVER")
-ip_port = os.environ.get("PORT_SERVER")
+ip_server = os.environ.get("IP_SERVER_FILES")
+ip_port = os.environ.get("PORT_SERVER_FILES")
 
 ip_port = 80 if ip_port is None else ip_port
 ip_server = "127.0.0.1" if ip_server is None else ip_server

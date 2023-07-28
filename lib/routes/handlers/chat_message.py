@@ -47,6 +47,7 @@ async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: We
             file_id = msg_data[0][0]
 
         # переоткрываем сообщение вместе с фото
+        msg_data = (await conn.read_data(db=db, table='messages', id_name='msg_id', id_data=new_msg.msg_id))
         new_msg = Message.parse_obj(msg_data[0])
         msg_json = await add_user_and_reply_to_msg(db=db, msg=new_msg, reqwest_user=user)
         receive_msg: ReceiveMessage = ReceiveMessage.parse_obj(msg)

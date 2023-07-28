@@ -43,7 +43,7 @@ async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: We
         while file_id == 0 and i < 20:
             i += 1
             await asyncio.sleep(3)
-            msg_data = (await conn.read_data(db=db, table='messages', id_name='msg_id', id_data=new_msg.msg_id))[0][0]
+            msg_data = (await conn.read_data(db=db, table='messages', id_name='msg_id', id_data=new_msg.msg_id))
             file_id = msg_data[0][0]
 
         # переоткрываем сообщение вместе с фото

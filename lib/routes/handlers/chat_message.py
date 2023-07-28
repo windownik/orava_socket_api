@@ -33,7 +33,7 @@ async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: We
         return True
     else:
         # отправляем подтверждение о доставке и сохранении
-        await websocket.send_json(socket_resp.response_201_confirm_receive)
+        await websocket.send_json(socket_resp.response_201_confirm_receive(msg_data[0]))
 
     all_users = await conn.read_data(table='users_chat', id_name='chat_id', id_data=receive_msg.body.chat_id, db=db)
     print(new_msg.status)
@@ -43,12 +43,11 @@ async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: We
         while file_id == 0 and i < 20:
             i += 1
             await asyncio.sleep(3)
-            print(file_id)
+            print(i, file_id)
             file_id = (await conn.read_data(db=db, table='messages', name='file_id', id_name='msg_id',
                                             id_data=new_msg.msg_id))[0][0]
         receive_msg.body.file_id = file_id
-        socket_resp.update_message(receive_msg, msg_json)
-        await websocket.send_json(socket_resp.response_202_save_file)
+        await websocket.send_json(socket_resp.response_202_save_file(msg_data=msg_data[0], file_id=file_id))
 
     push_users = await manager.broadcast_dialog(users_in_chat=all_users, body=socket_resp.response_200, msg=receive_msg)
     for user in push_users:

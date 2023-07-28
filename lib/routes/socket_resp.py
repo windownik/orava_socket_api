@@ -7,6 +7,7 @@ class SocketRespMsg:
     response_401: dict[str, int | bool | str]
     response_400_rights: dict[str, int | bool | str]
     response_201_confirm_receive: dict[str, int | bool | str]
+    response_202_save_file: dict[str, int | bool | str]
 
     def __init__(self):
         self.response_400_not_check = {"ok": False,
@@ -35,6 +36,13 @@ class SocketRespMsg:
                                              'msg_server_id': receive_msg.body.msg_id,
                                              "msg_type": "delivery",
                                              'desc': 'success receive'}
+        self.response_202_save_file = {"ok": True,
+                                       'status_code': 202,
+                                       'msg_client_id': receive_msg.msg_client_id,
+                                       'msg_server_id': receive_msg.body.msg_id,
+                                       'file_id': receive_msg.body.file_id,
+                                       "msg_type": "file_delivery",
+                                       'desc': 'success receive'}
 
         self.response_200 = {"ok": True,
                              'status_code': 200,

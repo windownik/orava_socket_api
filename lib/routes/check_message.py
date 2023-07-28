@@ -25,8 +25,8 @@ async def msg_manager(msg: dict, db: Depends, user: User, websocket: WebSocket,
                       manager: ConnectionManager):
     # Определяем тип сообщения
     socket_resp = SocketRespMsg()
-    if msg['msg_type'] == 'dialog':
-        print('dialog')
+    if msg['msg_type'] == 'send_msg':
+        print('send_msg')
         # Проверяем структуру сообщения по шаблону example_text_message
         if not check_msg(msg, example_text_message):
             await websocket.send_json(socket_resp.response_400_not_check)

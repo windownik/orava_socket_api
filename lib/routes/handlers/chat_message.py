@@ -1,3 +1,5 @@
+import asyncio
+
 from lib.db_objects import ReceiveMessage, Message, User
 from lib.routes.connection_manager import ConnectionManager
 from fastapi import WebSocket, Depends
@@ -8,7 +10,6 @@ from lib.routes.socket_resp import SocketRespMsg
 
 async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: WebSocket,
                                manager: ConnectionManager, socket_resp: SocketRespMsg):
-
     receive_msg = ReceiveMessage.parse_obj(msg)
     socket_resp.update_message(receive_msg, msg)
 
@@ -34,8 +35,17 @@ async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: We
         # отправляем подтверждение о доставке и сохранении
         await websocket.send_json(socket_resp.response_201_confirm_receive)
 
-    all_users = await conn.read_data(table='users_chat', id_name='chat_id',
-                                     id_data=receive_msg.body.chat_id, db=db)
+    all_users = await conn.read_data(table='users_chat', id_name='chat_id', id_data=receive_msg.body.chat_id, db=db)
+
+    if new_msg.status == 'with_file':
+        file_id = 0
+        while file_id == 0:
+            await asyncio.sleep(3)
+            file_id = (await conn.read_data(db=db, table='messages', name='file_id', id_name='msg_id',
+                                            id_data=new_msg.msg_id))[0][0]
+        receive_msg.body.file_id = file_id
+        socket_resp.update_message(receive_msg, msg_json)
+        await websocket.send_json(socket_resp.response_202_save_file)
 
     push_users = await manager.broadcast_dialog(users_in_chat=all_users, body=socket_resp.response_200, msg=receive_msg)
     for user in push_users:

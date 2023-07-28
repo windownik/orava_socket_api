@@ -39,7 +39,9 @@ async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: We
     print(new_msg.status)
     if new_msg.status == 'with_file':
         file_id = 0
-        while file_id == 0:
+        i = 0
+        while file_id == 0 and i < 20:
+            i += 1
             await asyncio.sleep(3)
             print(file_id)
             file_id = (await conn.read_data(db=db, table='messages', name='file_id', id_name='msg_id',

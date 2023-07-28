@@ -68,28 +68,28 @@ async def websocket_endpoint(websocket: WebSocket, user_id: int, db=Depends(data
     print('Connect', manager.connections.keys())
     # Очищаем пуш метки
     await conn.clear_users_chat_push(db=db, user_id=user_id)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            print(data)
-            await conn.update_user_active(db=db, user_id=user_id)
-            data = json.loads(data)
-            if 'echo' in data.keys():
-                data["user_id"] = user_id
-                # await manager.connect(websocket, user_id=user_id)
-                await websocket.send_json(data)
-                continue
-            check = await msg_manager(data, db=db, websocket=websocket, manager=manager, user=user)
+    # try:
+    while True:
+        data = await websocket.receive_text()
+        print(data)
+        await conn.update_user_active(db=db, user_id=user_id)
+        data = json.loads(data)
+        if 'echo' in data.keys():
+            data["user_id"] = user_id
+            # await manager.connect(websocket, user_id=user_id)
+            await websocket.send_json(data)
+            continue
+        check = await msg_manager(data, db=db, websocket=websocket, manager=manager, user=user)
 
-            if not check:
-                continue
-    except WebSocketDisconnect:
-        await manager.disconnect(user_id=user_id)
-    except Exception as ex:
-        print('Exception', ex)
-    finally:
-        print('finally', user_id)
-        try:
-            await manager.disconnect(user_id)
-        except:
-            pass
+        if not check:
+            continue
+    # except WebSocketDisconnect:
+    #     await manager.disconnect(user_id=user_id)
+    # except Exception as ex:
+    #     print('Exception', ex)
+    # finally:
+    #     print('finally', user_id)
+    #     try:
+    #         await manager.disconnect(user_id)
+    #     except:
+    #         pass

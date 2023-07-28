@@ -8,8 +8,7 @@ ip_server = "127.0.0.1" if ip_server is None else ip_server
 
 
 def create_file_json(file) -> dict:
-    resp = {'ok': True,
-            'file_id': file['id'],
+    resp = {'file_id': file['id'],
             'file_name': file['file_name'],
             'file_type': file['file_type'],
             'creator_id': file['owner_id'],

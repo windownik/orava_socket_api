@@ -13,12 +13,12 @@ async def handler_chat_message(msg: dict, db: Depends, user: User, websocket: We
     receive_msg = ReceiveMessage.parse_obj(msg)
     socket_resp.update_message(receive_msg, msg)
 
-    # Проверяем права доступа на сообщение
-    owner_id = await conn.get_token(db=db, token_type='access', token=receive_msg.access_token)
-
-    if not owner_id:
-        await websocket.send_json(socket_resp.response_401)
-        return True
+    # # Проверяем права доступа на сообщение
+    # owner_id = await conn.get_token(db=db, token_type='access', token=receive_msg.access_token)
+    #
+    # if not owner_id:
+    #     await websocket.send_json(socket_resp.response_401)
+    #     return True
 
     msg_data = await conn.save_msg(db=db, msg=msg['body'])
 

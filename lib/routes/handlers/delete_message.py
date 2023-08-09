@@ -1,7 +1,7 @@
 import datetime
 import time
 
-from lib.db_objects import User, DeleteMsg
+from lib.db_objects import DeleteMsg
 from fastapi import WebSocket, Depends
 from lib import sql_connect as conn
 from lib.routes.connection_manager import ConnectionManager

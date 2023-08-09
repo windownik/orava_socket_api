@@ -17,6 +17,7 @@ async def handler_delete_msg(msg: dict, db: Depends, websocket: WebSocket, manag
     if not owner_id:
         await websocket.send_json(socket_resp.response_401)
         return True
+    print('check user')
     await conn.update_data(db=db, table='messages', name='status', data='delete', id_name='msg_id',
                            id_data=del_msg.delete_msg_id)
     now = datetime.datetime.now()

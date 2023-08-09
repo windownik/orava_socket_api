@@ -9,7 +9,7 @@ from lib.routes.socket_resp import SocketRespGetUpdates
 
 
 async def handler_delete_msg(msg: dict, db: Depends, websocket: WebSocket, manager: ConnectionManager):
-    del_msg = DeleteMsg(msg)
+    del_msg = DeleteMsg.parse_obj(msg)
     socket_resp = SocketRespGetUpdates()
 
     # Проверяем права доступа на сообщение

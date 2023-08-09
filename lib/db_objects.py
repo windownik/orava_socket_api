@@ -165,3 +165,11 @@ class GetUpdatesMessage(BaseModel):
     from_id: int = 0
     chat_id: int = 0
     lust_msg_id: int = 0
+
+
+class DeleteMsg(BaseModel):
+    refresh_token: str
+    msg_type: str
+    date_time: int
+    chat_id: int
+    delete_msg_id: int

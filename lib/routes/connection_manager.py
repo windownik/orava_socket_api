@@ -21,12 +21,17 @@ class ConnectionManager:
         for connect in self.connections:
             await connect.send_json(data)
 
+    async def broadcast_all_in_chat(self, body: dict, users_in_chat: tuple,):
+        user_id_list = self.connections.keys()
+        for user in users_in_chat:
+            if user['user_id'] in user_id_list:
+                connect = self.connections[user['user_id']]
+                await connect.send_json(body)
+
     async def broadcast_dialog(self, body: dict, users_in_chat: tuple, msg: ReceiveMessage) -> list[Any]:
         user_id_list = self.connections.keys()
         users_for_push = []
-        print(111, len(users_in_chat), self.connections.keys())
         for user in users_in_chat:
-            print(user['user_id'])
             if user['user_id'] == msg.body.from_id:
                 continue
             if user['user_id'] in user_id_list:

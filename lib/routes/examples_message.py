@@ -23,3 +23,11 @@ example_get_updates_message = {
     'from_id': 32,
     'lust_msg_id': 65,
 }
+
+example_delete_message = {
+    'refresh_token': 'fnriverino',
+    'msg_type': 'delete_msg',
+    "date_time": 123,
+    'chat_id': 32,
+    'delete_msg_id': 65,
+}

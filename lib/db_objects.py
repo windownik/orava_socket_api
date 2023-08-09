@@ -168,6 +168,7 @@ class GetUpdatesMessage(BaseModel):
 
 
 class DeleteMsg(BaseModel):
+    status_code: int
     refresh_token: str
     msg_type: str
     date_time: int

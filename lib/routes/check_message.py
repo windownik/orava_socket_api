@@ -50,4 +50,5 @@ async def msg_manager(msg: dict, db: Depends, user: User, websocket: WebSocket,
         if not check_msg(msg, example_delete_message):
             await websocket.send_json(socket_resp.response_400_not_check)
             return True
+        print('check')
         await handler_delete_msg(db=db, msg=msg, websocket=websocket,  manager=manager)

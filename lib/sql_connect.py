@@ -7,7 +7,7 @@ from fastapi_asyncpg import configure_asyncpg
 from lib.app_init import app
 from fastapi import Depends
 
-from lib.db_objects import User
+from lib.db_objects import User, Message, ChangeMsg
 
 password = os.environ.get("DATABASE_PASS")
 host = os.environ.get("DATABASE_HOST")
@@ -471,6 +471,14 @@ async def update_user(db: Depends, name: str, surname: str, midl_name: str, lang
 async def update_data(db: Depends, table: str, name: str, id_data, data, id_name: str = 'id'):
     await db.execute(f"UPDATE {table} SET {name}=$1 WHERE {id_name}=$2;",
                      data, id_data)
+
+
+# Обновляем информацию
+async def update_msg(db: Depends, msg: ChangeMsg):
+    await db.execute(f"UPDATE messages SET text=$1, from_id=$2, reply_id=$3, chat_id=$4, to_id=$5, file_id=$6 "
+                     f"WHERE msg_id=$7;",
+                     msg.message.text, msg.message.from_id, msg.message.reply_id, msg.message.chat_id,
+                     msg.message.to_id, msg.message.file_id, msg.message.msg_id)
 
 
 # Обновляем информацию

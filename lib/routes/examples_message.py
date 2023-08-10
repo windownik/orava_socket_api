@@ -31,3 +31,20 @@ example_delete_message = {
     'chat_id': 32,
     'delete_msg_id': 65,
 }
+
+example_change_message = {
+    'refresh_token': 'fnriverino',
+    'msg_type': 'change_msg',
+    'body': {
+        'msg_id': 2132,
+        'text': 'Text of this message',
+        'from_id': 32,
+        'reply_id': 342,
+        'chat_id': 65,
+        'file_id': 0,
+        'status': 'not_read',
+        'read_date': 0,
+        'deleted_date': 0,
+        'create_date': 124321412,
+    }
+}

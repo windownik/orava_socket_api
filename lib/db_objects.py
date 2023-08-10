@@ -174,3 +174,9 @@ class DeleteMsg(BaseModel):
     date_time: int
     chat_id: int
     delete_msg_id: int
+
+
+class ChangeMsg(BaseModel):
+    refresh_token: str
+    msg_type: str
+    message: Message

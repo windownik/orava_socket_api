@@ -2,7 +2,9 @@ from fastapi import WebSocket, Depends
 
 from lib.db_objects import User
 from lib.routes.connection_manager import ConnectionManager
-from lib.routes.examples_message import example_text_message, example_get_updates_message, example_delete_message
+from lib.routes.examples_message import example_text_message, example_get_updates_message, example_delete_message, \
+    example_change_message
+from lib.routes.handlers.change_message import handler_change_msg
 from lib.routes.handlers.chat_message import handler_chat_message
 from lib.routes.handlers.delete_message import handler_delete_msg
 from lib.routes.handlers.get_updates import handler_get_updates
@@ -52,3 +54,13 @@ async def msg_manager(msg: dict, db: Depends, user: User, websocket: WebSocket,
             return True
         print('check')
         await handler_delete_msg(db=db, msg=msg, websocket=websocket,  manager=manager)
+
+    # Определяем тип сообщения
+    elif msg['msg_type'] == 'change_msg':
+        print('change_msg')
+        # Проверяем структуру сообщения по шаблону example_get_updates_message
+        if not check_msg(msg, example_change_message):
+            await websocket.send_json(socket_resp.response_400_not_check)
+            return True
+        print('check')
+        await handler_change_msg(db=db, msg=msg, websocket=websocket,  manager=manager, reqwest_user=user)

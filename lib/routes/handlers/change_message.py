@@ -9,6 +9,7 @@ from lib.routes.socket_resp import SocketRespGetUpdates
 
 async def handler_change_msg(msg: dict, db: Depends, websocket: WebSocket, manager: ConnectionManager,
                              reqwest_user: User):
+    print(msg)
     change_msg = Message.parse_obj(msg['message'])
     socket_resp = SocketRespGetUpdates()
 

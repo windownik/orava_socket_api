@@ -9,7 +9,6 @@ from lib.routes.socket_resp import SocketRespGetUpdates
 
 async def handler_change_msg(msg: dict, db: Depends, websocket: WebSocket, manager: ConnectionManager,
                              reqwest_user: User):
-    print(msg)
     socket_resp = SocketRespGetUpdates()
 
     # Проверяем права доступа на сообщение
@@ -17,11 +16,8 @@ async def handler_change_msg(msg: dict, db: Depends, websocket: WebSocket, manag
     if not owner_id:
         await websocket.send_json(socket_resp.response_401)
         return True
-    print('check user')
     await conn.update_msg(db=db, msg=msg['message'])
-    print("update message")
     msg_data = await conn.read_data(table='messages', id_name='msg_id', id_data=msg['message']['msg_id'], db=db)
-    print(msg['message']['msg_id'], msg_data)
     new_msg = Message.parse_obj(msg_data[0])
     msg_json = await add_user_and_reply_to_msg(db=db, msg=new_msg, reqwest_user=reqwest_user)
     all_users = await conn.read_data(table='users_chat', id_name='chat_id', id_data=msg['message']['chat_id'], db=db)

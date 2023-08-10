@@ -35,7 +35,7 @@ example_delete_message = {
 example_change_message = {
     'refresh_token': 'fnriverino',
     'msg_type': 'change_msg',
-    'body': {
+    'message': {
         'msg_id': 2132,
         'text': 'Text of this message',
         'from_id': 32,

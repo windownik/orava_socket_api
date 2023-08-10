@@ -21,7 +21,7 @@ async def handler_change_msg(msg: dict, db: Depends, websocket: WebSocket, manag
     await conn.update_msg(db=db, msg=change_msg)
     print("update message")
     msg_data = await conn.read_data(table='messages', id_name='msg_id', id_data=change_msg.message.msg_id, db=db)
-    new_msg = Message.parse_obj(msg_data)
+    new_msg = Message.parse_obj(msg_data[0])
     msg_json = await add_user_and_reply_to_msg(db=db, msg=new_msg, reqwest_user=reqwest_user)
     all_users = await conn.read_data(table='users_chat', id_name='chat_id', id_data=change_msg.message.chat_id, db=db)
 

@@ -474,11 +474,11 @@ async def update_data(db: Depends, table: str, name: str, id_data, data, id_name
 
 
 # Обновляем информацию
-async def update_msg(db: Depends, msg: Message):
+async def update_msg(db: Depends, msg: dict):
     await db.execute(f"UPDATE messages SET text=$1, from_id=$2, reply_id=$3, chat_id=$4, to_id=$5, file_id=$6 "
                      f"WHERE msg_id=$7;",
-                     msg.text, msg.from_id, msg.reply_id, msg.chat_id,
-                     msg.to_id, msg.file_id, msg.msg_id)
+                     msg['text'], msg['from_id'], msg['reply_id'], msg['chat_id'],
+                     msg['to_id'], msg['file_id'], msg['msg_id'])
 
 
 # Обновляем информацию
